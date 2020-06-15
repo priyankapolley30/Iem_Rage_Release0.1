@@ -21,55 +21,71 @@ from app.models.HashtagModel import HashtagModel
 from app.models.TwitterSentimentAnalysisModel import TwitterSentimentAnalysisModel
 from app.models.UserModel import UserModel
 from app.services.GetColorBySentimentService import GetColorBySentimentService
+from flask import Flask
+from flask_cors import CORS
 
+from app.controllers.v1 import version1
 
-class Usermodel():
+app = Flask(__name__)
 
-    def __init__(self):
-        self.sql = SQL()
-        self.filename = "app\database\TwitterDB.db"
-        self.db_location = os.path.join(os.getcwd(), self.filename)
+cors = CORS(application, resources={r"/*": {"origins": "*"}}, support_credentials=True)
+application.config["CORS_HEADERS"] = 'application/json'
+application.register_blueprint(version1,url_prefix="/twitter-sentiment-analysis/v1")
 
-    class TestCase(unittest.TestCase):
-        def setUp(self, username):
-            app.config['TESTING'] = True
-            app.config['WTF_CSRF_ENABLED'] = False
-            TwitterDB.create_all()
-            self.app = app.test_client()
+class FlaskTest(unittest.TestCase):
+    
+    def test_create_users(self):
+        tester = app.test_client(self)
+        response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/users")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
+                  
+     def test_login(self):
+        tester = app.test_client(self)
+        response = tester.post("http://localhost:5000/twitter-sentiment-analysis/v1/login",data=json.dumps(dict(usename='RaiP',password='12345')),content_type='application/join')
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
+        
+       
+     def test_analysis(self):
+        tester = app.test_client(self)
+        response = tester.post("http://localhost:5000/twitter-sentiment-analysis/v1/analysis")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
+        
 
-        def tearDown(self):
-            TwitterDB.session.remove()
-            TwitterDB.drop_all(bind='__all__')
-            TwitterDB.drop_all()
+     def test_get_twitter_users_data(self):
+        tester = app.test_client(self)
+        response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/get-twitter-users-data")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
+        
+     def test_hashtags(self):
+        tester = app.test_client(self)
+        response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/hashtags")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
+        
+      
+     def test_create_hashtags(self):
+        tester = app.test_client(self)
+        response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/create-hashtag")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
 
-    class TestUserModel(TestCase):
-        usermodel = UserModel()  # instantiate
-
-    def index(self, username):
-        return self.app.post('/index', data=dict(usename=username), follow_redirects=True)
-
-    def test_promote_user(self, username):
-        index = UserModel(username='RaiP')
-        TwitterDB.session.add(index)
-        TwitterDB.session.commit()
-        response = self.index(username='RaiP')
-        self.assertIn(b'You have been logged in!', response.data)
-
-    def test_demote_user(self, username):
-        index = UserModel(username='RaiP')
-        TwitterDB.session.add(index)
-        TwitterDB.session.commit()
-        response = self.index(username='RaiP')
-        self.assertIn(b'You have been logged in!', response.data)
-
-        def test_create_user(self, username, password,email,phone,first_name,last_name,address,registration_no, speciality):
-            index1 = username(username='RaiP', password='1234', email='raipolley1@gmail.com', phone='9804012207', first_name='rai', last_name='polley',address='kolkata', registration_no='123', speciality='cse')
-            TwitterDB.session.add(index1)
-            TwitterDB.session.commit()
-            response = self.index1(username='RaiP', password='1234', email='raipolley1@gmail.com', phone='9804012207', first_name='rai', last_name='polley',address='kolkata', registration_no='123', speciality='cse')
-            self.assertIn(b'You have been logged in!', response.data)
-            print()
-
+        
+     def test_activate_hashtags(self):
+        tester = app.test_client(self)
+        response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/activate-hashtag/suicide")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
+      
+      
+     def test_deactivate_hashtags(self):
+        tester = app.test_client(self)
+        response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/deactivate-hashtag/suicide")
+        statuscode = response.status_code
+        self.assertTrue(statuscode,200)
 
 
 if __name__ == '__main__':
