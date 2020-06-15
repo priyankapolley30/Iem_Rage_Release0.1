@@ -1,6 +1,6 @@
 import unittest
 
-# This is the class we want to test. So, we need to import it
+
 
 
 from app import database
@@ -38,54 +38,54 @@ class FlaskTest(unittest.TestCase):
         tester = app.test_client(self)
         response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/users")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
                   
      def test_login(self):
         tester = app.test_client(self)
         response = tester.post("http://localhost:5000/twitter-sentiment-analysis/v1/login",data=json.dumps(dict(usename='RaiP',password='12345')),content_type='application/join')
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
         
        
      def test_analysis(self):
         tester = app.test_client(self)
         response = tester.post("http://localhost:5000/twitter-sentiment-analysis/v1/analysis")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
         
 
      def test_get_twitter_users_data(self):
         tester = app.test_client(self)
         response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/get-twitter-users-data")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
         
      def test_hashtags(self):
         tester = app.test_client(self)
         response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/hashtags")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
         
       
      def test_create_hashtags(self):
         tester = app.test_client(self)
         response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/create-hashtag")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
 
         
      def test_activate_hashtags(self):
         tester = app.test_client(self)
         response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/activate-hashtag/suicide")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
       
       
      def test_deactivate_hashtags(self):
         tester = app.test_client(self)
         response = tester.get("http://localhost:5000/twitter-sentiment-analysis/v1/deactivate-hashtag/suicide")
         statuscode = response.status_code
-        self.assertTrue(statuscode,200)
+        self.assertEqual(statuscode,200)
 
 
 if __name__ == '__main__':
